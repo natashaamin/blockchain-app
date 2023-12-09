@@ -26,6 +26,7 @@ const getEthereumContract = () => {
 export const WaveProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
+  const [noMetamask, setNoMetmask] = useState(false);
   const [formData, setFormData] = useState({
     addressTo: "",
     amount: "",
@@ -81,9 +82,14 @@ export const WaveProvider = ({ children }) => {
   const connectWalletToMetamask = async () => {
     try {
       const { ethereum } = window;
-
+      
       if (!ethereum) {
-        console.log("Get Metamask");
+        setNoMetmask(true)
+        console.log("Get metamask");
+
+        setInterval(() => {
+          setNoMetmask(false)
+        }, 5000);
       }
 
       const accounts = await ethereum.request({
@@ -198,6 +204,7 @@ export const WaveProvider = ({ children }) => {
     // };
   }, [waveCount]);
 
+
   return (
     <WaveContext.Provider
       value={{
@@ -208,6 +215,7 @@ export const WaveProvider = ({ children }) => {
         formData,
         onPressedWaveButton,
         allWaves,
+        noMetamask
       }}
     >
       {children}
